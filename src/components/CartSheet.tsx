@@ -1,15 +1,31 @@
+import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 
 const CartSheet = () => {
   const { items, totalItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const [checkoutMode, setCheckoutMode] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [success, setSuccess] = useState(false);
 
   const totalPrice = items.reduce((sum, item) => {
     const price = parseInt(item.price.replace(/[^0-9]/g, ""));
     return sum + price * item.quantity;
   }, 0);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess(true);
+    clearCart();
+  };
 
   return (
     <Sheet>
@@ -23,77 +39,152 @@ const CartSheet = () => {
           )}
         </Button>
       </SheetTrigger>
+
       <SheetContent className="w-full sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle className="font-display">Your Cart ({totalItems})</SheetTitle>
-        </SheetHeader>
-        
-        <div className="mt-6 flex flex-col h-[calc(100vh-200px)]">
-          {items.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-muted-foreground">Your cart is empty</p>
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 overflow-auto space-y-4">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 bg-secondary/30 rounded-xl">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-20 h-20 object-contain bg-secondary rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <p className="text-xs text-muted-foreground">{item.brand}</p>
-                      <h4 className="font-semibold text-foreground">{item.name}</h4>
-                      <p className="text-primary font-bold">{item.price}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        >
-                          <Minus className="w-3 h-3" />
-                        </Button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        >
-                          <Plus className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 ml-auto text-destructive"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="border-t border-border pt-4 mt-4 space-y-4">
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total:</span>
-                  <span className="text-primary">KES {totalPrice.toLocaleString()}</span>
+        {/* -------------------------------- */}
+        {/* STEP 1: SHOPPING CART VIEW       */}
+        {/* -------------------------------- */}
+
+        {!checkoutMode && !success && (
+          <>
+            <SheetHeader>
+              <SheetTitle className="font-display">Your Cart ({totalItems})</SheetTitle>
+            </SheetHeader>
+
+            <div className="mt-6 flex flex-col h-[calc(100vh-200px)]">
+              {items.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <p className="text-muted-foreground">Your cart is empty</p>
                 </div>
-                <Button className="w-full" size="lg">
-                  Checkout
-                </Button>
-                <Button variant="outline" className="w-full" onClick={clearCart}>
-                  Clear Cart
-                </Button>
+              ) : (
+                <>
+                  <div className="flex-1 overflow-auto space-y-4">
+                    {items.map((item) => (
+                      <div key={item.id} className="flex gap-4 p-4 bg-secondary/30 rounded-xl">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-20 h-20 object-contain bg-secondary rounded-lg"
+                        />
+                        <div className="flex-1">
+                          <p className="text-xs text-muted-foreground">{item.brand}</p>
+                          <h4 className="font-semibold text-foreground">{item.name}</h4>
+                          <p className="text-primary font-bold">{item.price}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            >
+                              <Minus className="w-3 h-3" />
+                            </Button>
+                            <span className="w-8 text-center">{item.quantity}</span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            >
+                              <Plus className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 ml-auto text-destructive"
+                              onClick={() => removeFromCart(item.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-border pt-4 mt-4 space-y-4">
+                    <div className="flex justify-between text-lg font-bold">
+                      <span>Total:</span>
+                      <span className="text-primary">KES {totalPrice.toLocaleString()}</span>
+                    </div>
+
+                    <Button className="w-full" size="lg" onClick={() => setCheckoutMode(true)}>
+                      Checkout
+                    </Button>
+
+                    <Button variant="outline" className="w-full" onClick={clearCart}>
+                      Clear Cart
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* -------------------------------- */}
+        {/* STEP 2: CHECKOUT FORM            */}
+        {/* -------------------------------- */}
+
+        {checkoutMode && !success && (
+          <div className="mt-4">
+            <SheetHeader>
+              <SheetTitle className="font-display">Complete Payment</SheetTitle>
+            </SheetHeader>
+
+            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+              <div>
+                <Label>Name</Label>
+                <Input
+                  required
+                  placeholder="Enter full name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
               </div>
-            </>
-          )}
-        </div>
+
+              <div>
+                <Label>Email</Label>
+                <Input
+                  required
+                  type="email"
+                  placeholder="Enter your email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <Label>Phone (MPESA)</Label>
+                <Input
+                  required
+                  placeholder="07XXXXXXXX"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+              </div>
+
+              <Button type="submit" className="w-full" size="lg">
+                Pay KES {totalPrice.toLocaleString()}
+              </Button>
+
+              <Button variant="outline" className="w-full" onClick={() => setCheckoutMode(false)}>
+                Back to Cart
+              </Button>
+            </form>
+          </div>
+        )}
+
+        {/* -------------------------------- */}
+        {/* STEP 3: PAYMENT SUCCESS           */}
+        {/* -------------------------------- */}
+
+        {success && (
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-4 mt-12">
+            <h2 className="text-xl font-bold text-green-600">Payment Successful ✔</h2>
+            <p className="text-muted-foreground">Thank you, {form.name}! Your order has been placed.</p>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
