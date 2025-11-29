@@ -1,7 +1,15 @@
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
+  const scrollToServices = () => {
+    const element = document.querySelector("#services");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="home"
@@ -31,11 +39,13 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="xl">
-                Browse Phones
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-              <Button variant="hero-outline" size="xl">
+              <Link to="/products">
+                <Button variant="hero" size="xl">
+                  Browse Phones
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+              <Button variant="hero-outline" size="xl" onClick={scrollToServices}>
                 Our Services
               </Button>
             </div>
@@ -68,9 +78,9 @@ const Hero = () => {
             <div className="relative animate-float">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-3xl scale-75" />
               <img
-                src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80"
-                alt="Latest smartphone"
-                className="relative z-10 w-72 md:w-96 h-auto object-contain drop-shadow-2xl"
+                src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80"
+                alt="Latest smartphone collection"
+                className="relative z-10 w-72 md:w-96 h-auto object-contain drop-shadow-2xl rounded-3xl"
               />
             </div>
             
