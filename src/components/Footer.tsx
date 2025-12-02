@@ -121,13 +121,13 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <span className="text-background/70 text-sm">
-                  Oginga Odinga Street, Kisumu City, Kenya
+                   Odinga Street, Kisumu City, Kenya
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
                 <a href="tel:+254700123456" className="text-background/70 hover:text-primary transition-colors text-sm">
-                  +254 700 123 456
+                  +254 700 123 457
                 </a>
               </li>
               <li className="flex items-center gap-3">

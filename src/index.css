@@ -124,6 +124,23 @@ All colors MUST be HSL.
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;
   }
+  
+  /* Glitter Animations */
+  .animate-twinkle {
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  
+  .animate-twinkle-delayed {
+    animation: twinkle-delayed 3s ease-in-out infinite;
+  }
+  
+  .animate-glitter-float {
+    animation: glitterFloat 4s ease-in-out infinite;
+  }
+  
+  .animate-ray-rotate {
+    animation: rayRotate 8s linear infinite;
+  }
 }
 
 @keyframes float {
@@ -145,6 +162,63 @@ All colors MUST be HSL.
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Glitter Animation Keyframes */
+@keyframes twinkle {
+  0%, 100% { 
+    opacity: 0; 
+    transform: scale(0.8); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2); 
+  }
+}
+
+@keyframes twinkle-delayed {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(0.9); 
+  }
+  25%, 75% { 
+    opacity: 1; 
+    transform: scale(1.1); 
+  }
+}
+
+@keyframes glitterFloat {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateY(0px) rotate(0deg) scale(0.8); 
+  }
+  25% { 
+    opacity: 1; 
+    transform: translateY(-10px) rotate(90deg) scale(1); 
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: translateY(-5px) rotate(180deg) scale(1.1); 
+  }
+  75% { 
+    opacity: 1; 
+    transform: translateY(-15px) rotate(270deg) scale(0.9); 
+  }
+}
+
+@keyframes rayRotate {
+  0% { 
+    transform: rotate(0deg) scaleY(1); 
+    opacity: 0.6; 
+  }
+  50% { 
+    transform: rotate(180deg) scaleY(1.2); 
+    opacity: 0.9; 
+  }
+  100% { 
+    transform: rotate(360deg) scaleY(1); 
+    opacity: 0.6; 
+  }
 }
 
 @layer base {
